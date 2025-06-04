@@ -84,6 +84,10 @@ class User(AbstractUser):
 
     @property
     def is_staff_level(self):
+        """
+        사용자가 STAFF 등급인지 확인합니다.
+        - STAFF 등급이면 True, 아니면 False를 반환합니다.
+        """
         return self.membership_level == User.MembershipLevel.STAFF
 
 
@@ -120,10 +124,20 @@ class UserProfile(models.Model):
     )
 
     def __str__(self):
+        """
+        사용자 프로필의 문자열 표현.
+        - 사용자 이메일과 멤버 ID를 포함합니다.
+        """
         return f"{self.user.email}'s Profile (Member ID: {self.member_id})"  # pylint: disable=no-member
 
     @property
     def is_membership_active(self):
+        """
+        회원의 멤버십이 활성 상태인지 확인합니다.
+        - 시작일과 만료일이 모두 설정되어 있고, 현재 날짜가 그 범위 내에 있는 경우 활성으로 간주합니다.
+        - 시작일만 설정되어 있고 만료일이 없으면 항상 활성으로 간주합니다.
+        - 둘 다 설정되어 있지 않거나 시작일이 미래인 경우 비활성으로 간주합니다.
+        """
         if self.membership_start_date and self.membership_end_date:
             today = timezone.now().date()
             return self.membership_start_date <= today <= self.membership_end_date
@@ -136,12 +150,12 @@ class UserProfile(models.Model):
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
+    """
+    사용자 모델이 저장될 때마다 UserProfile을 생성하거나 업데이트합니다.
+    - 새 사용자가 생성되면 UserProfile을 생성합니다.
+    - 기존 사용자의 경우 UserProfile을 업데이트합니다.
+    """
     if created:
         UserProfile.objects.create(user=instance)  # pylint: disable=no-member
-        try:
-            if hasattr(instance, "profile"):
-                pass  # instance.profile.save()
-        except UserProfile.DoesNotExist:  # pylint: disable=no-member
-            UserProfile.objects.create(user=instance)  # pylint: disable=no-member
     else:
         instance.profile.save()
