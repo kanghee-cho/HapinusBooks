@@ -1,9 +1,12 @@
-.env
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+.env
+.DS_Store
 venv/
 logs/
 data/
+db.sqlite3
+static_collected/
 _old/
