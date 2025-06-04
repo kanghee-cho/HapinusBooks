@@ -1,3 +1,7 @@
+import base64
+import random
+import secrets
+import string
 import uuid
 
 from django.conf import settings
@@ -7,6 +11,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from hashids import Hashids
 
 
 class UserManager(BaseUserManager):
@@ -88,7 +93,10 @@ class User(AbstractUser):
         사용자가 STAFF 등급인지 확인합니다.
         - STAFF 등급이면 True, 아니면 False를 반환합니다.
         """
-        return self.membership_level == User.MembershipLevel.STAFF
+        return (
+            self.membership_level == User.MembershipLevel.STAFF
+            or self.membership_level == User.MembershipLevel.ADMIN
+        )
 
 
 class UserProfile(models.Model):
@@ -102,16 +110,23 @@ class UserProfile(models.Model):
         primary_key=True,
         related_name="profile",
     )
-    memeber_id = models.UUIDField(
-        _("member ID"),
+    full_uuid = models.UUIDField(
+        _("Full UUID"),
         default=uuid.uuid4,
         editable=False,
         unique=True,
-        help_text=_("Unique member ID for the user"),
+        help_text=_("Full UUID for internal use"),
+    )
+    member_id = models.CharField(
+        _("member ID"),
+        max_length=8,
+        editable=False,
+        unique=True,
+        help_text=_("Short unique member ID for the user"),
     )
     address = models.TextField(_("address"), blank=True, null=True)
     phone_number = models.CharField(
-        _("phone number"), max_length=20, blank=True, null=True
+        _("phone number"), max_length=30, blank=True, null=True
     )
     date_of_birth = models.DateField(_("date of birth"), blank=True, null=True)
     memo = models.TextField(_("memo"), blank=True, null=True)
@@ -146,6 +161,23 @@ class UserProfile(models.Model):
         ):  # 시작일만 있고 만료일이 없으면 항상 유효한 것으로 간주
             return self.membership_start_date <= timezone.now().date()
         return False  # 둘 다 없거나 시작일이 미래면 비활성
+
+    def save(self, *args, **kwargs):
+        """
+        Save method override to generate a member_id with 3 uppercase letters and 5 digits, ensuring uniqueness.
+        """
+        if not self.member_id:
+            while True:
+                # Generate a member_id with 3 uppercase letters and 5 digits
+                potential_id = "".join(
+                    random.choices(string.ascii_uppercase, k=3)
+                ) + "".join(random.choices(string.digits, k=5))
+                if not UserProfile.objects.filter(  # pylint: disable=no-member
+                    member_id=potential_id
+                ).exists():  # pylint: disable=no-member
+                    self.member_id = potential_id
+                    break
+        super().save(*args, **kwargs)
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)

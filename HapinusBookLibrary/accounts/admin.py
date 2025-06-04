@@ -47,6 +47,7 @@ class UserAdmin(BaseUserAdmin):
     list_display = (
         "email",
         "get_member_id",
+        "get_full_uuid",
         "first_name",
         "last_name",
         "membership_level",
@@ -103,6 +104,17 @@ class UserAdmin(BaseUserAdmin):
             return _("N/A")
 
     get_member_id.short_description = _("Member ID")
+
+    def get_full_uuid(self, instance):
+        """
+        UserProfile의 full_uuid를 반환합니다.
+        """
+        try:
+            return instance.profile.full_uuid
+        except UserProfile.DoesNotExist:  # pylint: disable=no-member
+            return _("N/A")
+
+    get_full_uuid.short_description = _("Full UUID")
 
     # 멤버십 활성 상태를 User 목록에 표시하기 위한 메서드
     def get_membership_status(self, instance):
