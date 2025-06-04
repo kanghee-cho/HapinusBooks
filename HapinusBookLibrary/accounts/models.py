@@ -36,7 +36,6 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
-        extra_fields.setdefault("membership_level", "admin")
 
         if extra_fields.get("is_staff") is not True:
             raise ValueError("슈퍼유저는 is_staff=True이어야 합니다.")
@@ -56,25 +55,6 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
-    class MembershipLevel(models.TextChoices):
-        """
-        회원 등급을 정의하는 클래스.
-        각 등급은 텍스트 선택 옵션으로 정의됩니다.
-        """
-
-        BASIC = "BASIC", _("Basic")
-        STANDARD = "STANDARD", _("Standard")
-        PLUS = "PLUS", _("Plus")
-        STAFF = "STAFF", _("Staff")
-        ADMIN = "ADMIN", _("Admin")
-
-    membership_level = models.CharField(
-        max_length=20,
-        choices=MembershipLevel.choices,
-        default=MembershipLevel.BASIC,
-        verbose_name=_("membership level"),
-    )
-
     objects = UserManager()
 
     def __str__(self):
@@ -83,17 +63,6 @@ class User(AbstractUser):
         이메일을 반환합니다.
         """
         return self.email
-
-    @property
-    def is_staff_level(self):
-        """
-        사용자가 STAFF 등급인지 확인합니다.
-        - STAFF 등급이면 True, 아니면 False를 반환합니다.
-        """
-        return (
-            self.membership_level == User.MembershipLevel.STAFF
-            or self.membership_level == User.MembershipLevel.ADMIN
-        )
 
 
 class UserProfile(models.Model):

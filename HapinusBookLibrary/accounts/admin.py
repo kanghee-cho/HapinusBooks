@@ -50,15 +50,13 @@ class UserAdmin(BaseUserAdmin):
         "get_full_uuid",
         "first_name",
         "last_name",
-        "membership_level",
-        "is_staff_level",
         "is_active",
         "get_membership_status",
     )
     list_select_related = ("profile",)  # UserProfile 정보 N+1 쿼리 방지
 
     # User 목록에서 필터링할 수 있는 필드
-    list_filter = ("is_staff", "is_superuser", "is_active", "membership_level")
+    list_filter = ("is_staff", "is_superuser", "is_active")
 
     # User 상세 페이지에서 필드 순서 및 그룹화 (UserProfile 필드는 인라인에서 관리)
     fieldsets = (
@@ -68,7 +66,6 @@ class UserAdmin(BaseUserAdmin):
             _("Permissions & Level (from User model)"),
             {
                 "fields": (
-                    "membership_level",
                     "is_active",
                     "is_staff",
                     "is_superuser",
@@ -151,7 +148,6 @@ class UserAdmin(BaseUserAdmin):
                     "password2",
                     "first_name",
                     "last_name",
-                    "membership_level",
                     "is_staff",
                     "is_superuser",
                     "is_active",
