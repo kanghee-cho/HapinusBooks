@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}로그인{% endblock %}
+
+{% block extra_head %}
+    <style>
+        /* 로그인 페이지 전용 스타일 오버라이드 */
+        body {
+            /* base.html의 flex-direction: column을 오버라이드하여
+               로그인 폼을 페이지 중앙에 완벽하게 배치합니다. */
+            display: flex;
+            justify-content: center; /* 수평 중앙 정렬 */
+            align-items: center;    /* 수직 중앙 정렬 */
+            min-height: 100vh;      /* 뷰포트 전체 높이를 사용 */
+            background-color: #f0f2f5;
+        }
+        .content-wrapper {
+            /* 로그인 페이지에서는 메인 콘텐츠 영역이 유연하게 확장되지 않도록 합니다. */
+            flex: none;
+        }
+        .ui.middle.aligned.center.aligned.grid {
+            /* 그리드가 콘텐츠 크기에 맞춰지도록 높이 설정 */
+            height: auto;
+        }
+        .column {
+            max-width: 450px; /* 로그인 폼의 최대 너비 */
+        }
+        /* 로고 이미지 및 헤더 스타일 (base.html의 스타일과 충돌하지 않도록 명확하게 정의) */
+        .ui.teal.center.aligned.header .ui.image {
+            width: 48px;
+            height: 48px;
+            margin-right: 1em;
+        }
+        .ui.teal.center.aligned.header .content {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .ui.stacked.segment {
+            padding: 2em;
+        }
+        .ui.form .negative.message {
+            margin-bottom: 1.5em;
+        }
+        /* 로그인 페이지에서는 네비게이션 바와 푸터를 숨깁니다. */
+        .ui.inverted.segment, .main-footer {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="ui middle aligned center aligned grid">
+        <div class="column">
+            <h2 class="ui teal center aligned header">
+                <img src="https://react.semantic-ui.com/logo.png" class="ui image" alt="Logo"/>
+                <div class="content">
+                    계정 로그인
+                </div>
+            </h2>
+
+            <form class="ui large form" method="post">
+                {% csrf_token %}
+                <div class="ui stacked segment">
+                    {% if form.errors %}
+                        <div class="ui negative message">
+                            <i class="close icon"></i>
+                            <div class="header">
+                                로그인 오류!
+                            </div>
+                            <p>사용자 이름 또는 비밀번호가 올바르지 않습니다. 다시 시도해주세요.</p>
+                        </div>
+                    {% endif %}
+
+                    <div class="field">
+                        <div class="ui fluid left icon input">
+                            <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}" placeholder="E-mail address" autofocus>
+                            <i aria-hidden="true" class="user icon"></i>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui fluid left icon input">
+                            <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}" placeholder="Password">
+                            <i aria-hidden="true" class="lock icon"></i>
+                        </div>
+                    </div>
+                    <button class="ui teal large fluid button" type="submit">로그인</button>
+                    <input type="hidden" name="next" value="{{ next }}">
+                </div>
+            </form>
+
+            <div class="ui message">
+                새로운 사용자이신가요? <a href="#">회원가입</a>
+                <br>
+                비밀번호를 잊으셨나요? <a href="{% url 'password_reset' %}">비밀번호 찾기</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        // Semantic UI 메시지 닫기 기능 활성화
+        $('.message .close').on('click', function() {
+            $(this).closest('.message').transition('fade');
+        });
+    </script>
+{% endblock %}

@@ -25,6 +25,7 @@ from dotenv import load_dotenv
 
 # 환경 변수 로드
 load_dotenv()
+
 LOG_LEVEL = os.getenv("LOG_LEVEL", "ERROR").upper()
 LOG_FILE_PATH = "../logs/kakao_isbn_processor.log"
 logging.basicConfig(
