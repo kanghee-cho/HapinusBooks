@@ -92,8 +92,8 @@ CREATE TABLE books (
     title VARCHAR(255) NOT NULL,
     subtitle VARCHAR(255),                         -- 부제목
     original_title VARCHAR(255),                   -- 원제목 (번역서의 경우)
-    isbn10 VARCHAR(10) UNIQUE NULLABLE,            -- ISBN-10
-    isbn13 VARCHAR(13) UNIQUE NULLABLE,            -- ISBN-13
+    isbn10 VARCHAR(10) UNIQUE,                     -- ISBN-10
+    isbn13 VARCHAR(13) UNIQUE,                     -- ISBN-13
     publication_date DATE,
     edition VARCHAR(50),
     pages INTEGER,
