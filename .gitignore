@@ -8,5 +8,7 @@ __pycache__/
 logs/
 data/
 db.sqlite3
-static_collected/
+staticfiles/
+node_modules/
 _old/
+.env
