@@ -3,57 +3,10 @@
 
 {% block title %}로그인{% endblock %}
 
-{% block extra_head %}
-    <style>
-        /* 로그인 페이지 전용 스타일 오버라이드 */
-        body {
-            /* base.html의 flex-direction: column을 오버라이드하여
-               로그인 폼을 페이지 중앙에 완벽하게 배치합니다. */
-            display: flex;
-            justify-content: center; /* 수평 중앙 정렬 */
-            align-items: center;    /* 수직 중앙 정렬 */
-            min-height: 100vh;      /* 뷰포트 전체 높이를 사용 */
-            background-color: #f0f2f5;
-        }
-        .content-wrapper {
-            /* 로그인 페이지에서는 메인 콘텐츠 영역이 유연하게 확장되지 않도록 합니다. */
-            flex: none;
-        }
-        .ui.middle.aligned.center.aligned.grid {
-            /* 그리드가 콘텐츠 크기에 맞춰지도록 높이 설정 */
-            height: auto;
-        }
-        .column {
-            max-width: 450px; /* 로그인 폼의 최대 너비 */
-        }
-        /* 로고 이미지 및 헤더 스타일 (base.html의 스타일과 충돌하지 않도록 명확하게 정의) */
-        .ui.teal.center.aligned.header .ui.image {
-            width: 48px;
-            height: 48px;
-            margin-right: 1em;
-        }
-        .ui.teal.center.aligned.header .content {
-            display: inline-block;
-            vertical-align: middle;
-        }
-        .ui.stacked.segment {
-            padding: 2em;
-        }
-        .ui.form .negative.message {
-            margin-bottom: 1.5em;
-        }
-        /* 로그인 페이지에서는 네비게이션 바와 푸터를 숨깁니다. */
-        .ui.inverted.segment, .main-footer {
-            display: none;
-        }
-    </style>
-{% endblock %}
-
-{% block content %}
+{% block main_content %}
     <div class="ui middle aligned center aligned grid">
         <div class="column">
             <h2 class="ui teal center aligned header">
-                <img src="https://react.semantic-ui.com/logo.png" class="ui image" alt="Logo"/>
                 <div class="content">
                     계정 로그인
                 </div>

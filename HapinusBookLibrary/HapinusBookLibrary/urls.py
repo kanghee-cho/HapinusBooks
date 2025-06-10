@@ -17,9 +17,13 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import TemplateView
 
 urlpatterns = [
+    path(
+        "", TemplateView.as_view(template_name="template.html"), name="home"
+    ),  # template.html을 기본 페이지로 설정
     path("admin/", admin.site.urls),
-    path("accounts/", include("django.contrib.auth.urls")),  # 인증 관련 URL 포함
+    path("accounts/", include("accounts.urls")),  # 사용자 관련 URL 포함
     path("books/", include("books.urls")),  # 책 관련 URL 포함
 ]

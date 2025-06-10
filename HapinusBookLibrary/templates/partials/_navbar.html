@@ -1,0 +1,42 @@
+{% load static %}
+<div class="ui pointing menu">
+    <div class="ui container">
+        <a href="{% url 'home' %}" class="header item"> {# 홈 URL 연결을 권장합니다 #}
+            <h3 class="ui orange header">
+                HAPinUS Books
+            </h3>
+        </a>
+        <a href="#" class="item">큐레이팅</a>
+        <a href="#" class="item">기능</a>
+        <a href="#" class="item">소개</a>
+
+        <div class="right menu">
+            {% if user.is_authenticated %}
+                {# --- 로그인 상태일 때 --- #}
+                <div class="ui simple dropdown item">
+                    <i class="user circle icon"></i>
+                    {{ user.username }} <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <a href="{% url 'profile' %}" class="item">마이페이지</a>
+                        <div class="divider"></div>
+                        <form action="{% url 'logout' %}" method="post" class="item">
+                             {% csrf_token %}
+                             <button type="submit" style="background: none; border: none; padding: 0; margin: 0; cursor: pointer; width: 100%; text-align: left;">
+                                 로그아웃
+                             </button>
+                        </form>
+                    </div>
+                </div>
+
+            {% else %}
+                {# --- 비로그인 상태일 때 --- #}
+                <a href="{% url 'login' %}" class="item"> {# 로그인 URL 연결 #}
+                    <div class="ui primary button">
+                        <i class="sign-in alternate icon"></i>
+                        로그인
+                    </div>
+                </a>
+            {% endif %}
+        </div>
+        </div>
+</div>

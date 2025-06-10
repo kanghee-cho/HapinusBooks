@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ user.username }}님의 프로필{% endblock %}
+
+{% block main_content %}
+    <h2 class="ui header">
+        <i class="user circle outline icon"></i>
+        <div class="content">
+            마이페이지
+            <div class="sub header">{{ user.username }}님의 계정 정보입니다.</div>
+        </div>
+    </h2>
+
+    <div class="ui segment">
+        <div class="ui divided relaxed list">
+            <div class="item">
+                <div class="header">사용자 이름</div>
+                {{ user.username }}
+            </div>
+            <div class="item">
+                <div class="header">이메일 주소</div>
+                {{ user.email|default:"이메일이 등록되지 않았습니다." }}
+            </div>
+            <div class="item">
+                <div class="header">이름</div>
+                {{ user.first_name|default:"-" }}
+            </div>
+            <div class="item">
+                <div class="header">성</div>
+                {{ user.last_name|default:"-" }}
+            </div>
+            <div class="item">
+                <div class="header">가입일</div>
+                {{ user.date_joined|date:"Y년 m월 d일" }}
+            </div>
+        </div>
+    </div>
+
+    <div class="ui divider"></div>
+
+    <a href="{% url 'password_change' %}" class="ui button">
+        <i class="lock icon"></i>
+        비밀번호 변경
+    </a>
+
+{% endblock %}
+
+{% block sub_content %}
+    {# 오른쪽 사이드바가 필요 없다면 비워둡니다 #}
+{% endblock %}

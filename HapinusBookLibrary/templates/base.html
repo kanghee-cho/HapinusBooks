@@ -2,20 +2,31 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    {% include 'includes/_head.html' %} {# <head> 부분 포함 #}
+    {% include "partials/_head.html" %} {# 공통 헤드 파일 포함 #}
+
+    <title>{% block title %}Hapinus Book Library{% endblock %}</title>
+    {% block extra_head %}{% endblock %} {# 추가적인 CSS, 메타 태그 등을 위한 블록 #}
 </head>
 <body>
-    {% include 'includes/_navbar.html' %}
-
-    <div class="content-wrapper">
-        <div class="ui container">
-            {% block content %}
-            {% endblock %}
+    {% include "partials/_navbar.html" %} {# 공통 네비게이션 바 파일 포함 #}
+    <div class="ui main container">
+        <div class="ui grid stackable computer">
+            <div class="twelve wide column">
+                <div class="ui segment">
+                    {% block main_content %}
+                    {% endblock %}
+                </div>
+            </div>
+            <div class="four wide column">
+                <div class="ui segment">
+                    {% block sub_content %}
+                    {% endblock %}
+                </div>
+            </div>
         </div>
-    </div>
-    {% include 'includes/_footer.html' %}
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVWdYFrhXlYFX/QwLaqSostAcYvKlohguRwQ+tv" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    {% include "partials/_footer.html" %} {# 공통 푸터 파일 포함 #}
+    {% include "partials/_scripts.html" %} {# 공통 스크립트 파일 포함 #}
+
     {% block extra_js %}{% endblock %} {# 추가적인 JavaScript를 위한 블록 #}
 </body>
 </html>
